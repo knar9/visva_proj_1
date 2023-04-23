@@ -7,7 +7,8 @@ Project 1 of Visual Analytics lecture
 
 
 ### 1. These are the two analysis tasks we came up with. Here why they could be interesting to a board-game developer (1)
-
+average game length compared to rating --> Scatterplot 
+frequency of minAge --> Barchart
 
 ### 2. Here’s how we preprocessed the data for these two analysis tasks  (1)
 
