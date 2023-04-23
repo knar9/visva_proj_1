@@ -1,0 +1,74 @@
+/* We want these items to span the whole area the have (svgs don't do this by default)
+And we don't want unwanted scrollbars by accident */
+html,
+body,
+head,
+svg {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Grid-Layouting the Dashboard */
+body {
+  display: grid;
+
+  grid-template-areas: "header" "content";
+  grid-template-rows: 100px auto;
+}
+
+/* Layouting and styling the Header */
+.header {
+  grid-area: header;
+
+  background-color: #3e566c;
+
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-areas: "logo buttons";
+  grid-template-columns: 250px auto;
+
+  border-bottom: 2px solid white;
+}
+
+/* Styling the logo */
+.logo {
+  grid-area: logo;
+
+  padding: 5px;
+  cursor: pointer;
+}
+
+.content {
+  grid-area: content;
+}
+
+/* Styling the buttons */
+.buttons {
+  grid-area: buttons;
+
+  margin: 20px;
+
+  /* Flexbox is used, because you can add multiple buttons without worrying about the layout 
+    More at: https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.function_button {
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+  border-color: #3e566c;
+}
+
+.function_button:hover {
+  background-color: #3e566c;
+
+  color: white;
+  border-color: white;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VA Exercise 1</title>
+    <link rel="icon" type="image/x-icon" href="visva_sitelogo_no_white.png" />
+    <link href="main.css" rel="stylesheet" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./index.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <img
+        class="logo"
+        id="logo"
+        onclick="window.open('https://visva.cs.uni-koeln.de', '_blank')"
+        src="visva_sitelogo_no_white.png"
+      />
+      <div class="buttons">
+        <button class="function_button" onclick="print_hello_world()">
+          Say "Hello world!"
+        </button>
+        <button class="function_button" onclick="request_example_data('boardgames_40')">
+          Get Data
+        </button >
+      </div>
+    </div>
+    <div class="content"></div>
+  </body>
+</html>
