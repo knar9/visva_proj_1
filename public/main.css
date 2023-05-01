@@ -44,6 +44,7 @@ body {
 
 .content {
   grid-area: content;
+  padding: 15px;
 }
 
 /* Styling the buttons */

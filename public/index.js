@@ -12,7 +12,7 @@ socket.on("disconnect", () => {
   console.log("Disconnected from the webserver.");
 });
 
-socket.on("example_data", (obj) => {
+function createScatterplot(obj) {
   let dataset = []
   let datatuple = []
   for(let i = 0; i<40; i++) {
@@ -29,7 +29,7 @@ socket.on("example_data", (obj) => {
       height = 400 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
-  d3.select("svg").remove();
+  d3.select("#my_dataviz > svg").remove();
   var svg = d3.select("#my_dataviz")
     .append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -100,15 +100,31 @@ socket.on("example_data", (obj) => {
         : d[0] >= 160 && d[0] < 180 ? '#03045e' 
         : '#03045e'
     })
-
-})
+}
 
 function getUniqueMinimumAges(dataFile) {
   console.log(typeof dataFile);
   console.log(dataFile);
 }
 
-function createBarChart(data) {
+function createBarChart(original_data) {
+  var dict = {};
+
+  for (i = 0; i < original_data.length; i++) {
+    // json_data[i]["minage"];
+    var currentEntry = original_data[i]["minage"];
+    if (dict[currentEntry] === undefined) {
+      dict[currentEntry] = 1;
+    } else {
+      dict[currentEntry] = dict[currentEntry] + 1;
+    }
+  }
+  var data = [];
+  for (const [key, value] of Object.entries(dict)) {
+    data.push({ minAge: key, frequency: value });
+  }
+  console.log(data);
+
   // Set up the scales for the chart
   const xScale = d3
     .scaleBand()
@@ -126,7 +142,18 @@ function createBarChart(data) {
   const yAxis = d3.axisLeft(yScale);
 
   // Add the bars to the chart
-  const svg = d3.select("svg");
+  d3.select("#barchart-plot > svg").remove;
+  const svg = d3.select("#barchart-plot");
+
+  // Title for Barchart
+  svg.append('text')
+  .attr('x', 200/2 )
+  .attr('y', 40)
+  .attr('text-anchor', 'middle')
+  .style('font-family', 'Helvetica')
+  .style('font-size', 20)
+  .text('Barchart Plot');
+
   const bars = svg
     .selectAll("rect")
     .data(data)
@@ -138,65 +165,28 @@ function createBarChart(data) {
     .attr("height", (d) => 350 - yScale(d.frequency))
     .attr("fill", "steelblue");
 
+  // X label
+  svg.append('text')
+  .attr('x', 200/2 )
+  .attr('y', 400 + 40)
+  .attr('text-anchor', 'middle')
+  .style('font-family', 'Helvetica')
+  .style('font-size', 14)
+  .text('Minimum Age');
+
+  // Y label
+  svg.append('text')
+    .attr('text-anchor', 'middle')
+    .attr('transform', 'translate(-40,' + (200/2  )+  ')rotate(-90)')
+    .style('font-family', 'Helvetica')
+    .style('font-size', 14)
+    .text('Frequency');
+
   // Add the x-axis to the chart
   svg.append("g").attr("transform", "translate(0, 350)").call(xAxis);
 
   // Add the y-axis to the chart
   svg.append("g").call(yAxis);
-}
-
-function createBarChart2(dataFile) {
-  // socket.emit("get_data", string);
-
-  // Define the dimensions and margins of the chart
-  const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-  const width = 600 - margin.left - margin.right;
-  const height = 400 - margin.top - margin.bottom;
-
-  // Append the SVG element to the body of the page
-  const svg = d3
-    .select("body")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  // Load the data from the JSON file
-  d3.json(dataFile).then(function (data) {
-    // Define the x and y scales and axes
-    const xScale = d3.scaleBand().range([0, width]).padding(0.1);
-    const yScale = d3.scaleLinear().range([height, 0]);
-    const xAxis = d3.axisBottom(xScale);
-    const yAxis = d3.axisLeft(yScale);
-
-    // Map the data to the x and y domains
-    xScale.domain(data.map((d) => d.variable1));
-    yScale.domain([0, d3.max(data, (d) => d.variable2)]);
-
-    // Append the x and y axes to the chart
-    svg
-      .append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-      .selectAll("text")
-      .attr("transform", "rotate(-45)")
-      .style("text-anchor", "end");
-    svg.append("g").call(yAxis);
-
-    // Append the bars to the chart
-    svg
-      .selectAll(".bar")
-      .data(data)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("x", (d) => xScale(d.variable1))
-      .attr("y", (d) => yScale(d.variable2))
-      .attr("width", xScale.bandwidth())
-      .attr("height", (d) => height - yScale(d.variable2))
-      .attr("fill", "steelblue");
-  });
 }
 
 function request_example_data(string) {
@@ -207,7 +197,8 @@ function getBoardGameData() {
 }
 
 socket.on("receiveData", (data) => {
-  console.log(data);
+  //console.log(data);
+  createScatterplot(data);
   createBarChart(data);
 });
 

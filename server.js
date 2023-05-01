@@ -27,25 +27,7 @@ io.sockets.on("connection", (socket) => {
       }
       let json_data = JSON.parse(data);
       console.log(json_data);
-
-      var dict = {};
-
-      for (i = 0; i < json_data.length; i++) {
-        // json_data[i]["minage"];
-        var currentEntry = json_data[i]["minage"];
-        if (dict[currentEntry] === undefined) {
-          dict[currentEntry] = 1;
-        } else {
-          dict[currentEntry] = dict[currentEntry] + 1;
-        }
-      }
-      console.log(dict);
-      var arr = [];
-      for (const [key, value] of Object.entries(dict)) {
-        arr.push({ minAge: key, frequency: value });
-      }
-      console.log(arr);
-      socket.emit("receiveData", arr);
+      socket.emit("receiveData", json_data);
     });
   };
 
