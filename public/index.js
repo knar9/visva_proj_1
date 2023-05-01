@@ -1,6 +1,3 @@
-function print_hello_world() {
-  console.log("Hello world!");
-}
 // this is working because of the import in the html file
 // https://socket.io/docs/v4/client -installation/#standalone -build
 const socket = io();
@@ -142,35 +139,33 @@ function createBarChart(original_data) {
     height = 400 - margin.top - margin.bottom;
 
   // Add the bars to the chart
-  d3.select("#barchart-plot > svg").remove;
-  const svg = d3.select("#barchart-plot");
+  d3.select("#barchart-plot > svg").remove();
+  var svg = d3
+    .select("#barchart-plot")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .call(responsivefy)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
   // Title for Barchart
   svg
     .append("text")
-    .attr("x", 200 / 2)
-    .attr("y", 40)
+    .attr("x", width / 2)
+    .attr("y", -30)
     .attr("text-anchor", "middle")
     .style("font-family", "Helvetica")
     .style("font-size", 20)
-    .text("Barchart Plot");
+    .text("Bar Chart");
 
-  const bars = svg
-    .selectAll("rect")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("x", (d) => x(d.minAge))
-    .attr("y", (d) => y(d.frequency))
-    .attr("width", x.bandwidth())
-    .attr("height", (d) => 350 - y(d.frequency))
-    .attr("fill", "steelblue");
-
-  // Add X axis
+  // Add X axis 
   var x = d3
     .scaleBand()
     .domain(data.map((d) => d.minAge))
-    .range([0, width]);
+    .range([0, width])
+    .padding(0.2);
   svg
     .append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -183,8 +178,8 @@ function createBarChart(original_data) {
   // X label
   svg
     .append("text")
-    .attr("x", 200 / 2)
-    .attr("y", 400 + 40)
+    .attr("x", width / 2)
+    .attr("y", height + 40)
     .attr("text-anchor", "middle")
     .style("font-family", "Helvetica")
     .style("font-size", 14)
@@ -194,17 +189,29 @@ function createBarChart(original_data) {
   svg
     .append("text")
     .attr("text-anchor", "middle")
-    .attr("transform", "translate(-40," + 200 / 2 + ")rotate(-90)")
+    .attr("transform", "translate(-40," + width / 2 + ")rotate(-90)")
     .style("font-family", "Helvetica")
     .style("font-size", 14)
     .text("Frequency");
+
+  // Show the bars
+  svg
+  .selectAll("rect")
+  .data(data)
+  .enter()
+  .append("rect")
+  .attr("x", (d) => x(d.minAge))
+  .attr("y", (d) => y(d.frequency))
+  .attr("width", x.bandwidth())
+  .attr("height", (d) => height - y(d.frequency))
+  .attr("fill", "steelblue");
 }
 
 function getScatterPlotData() {
   socket.emit("getScatterPlotData", "boardgames_40");
 }
-function getBarchartData() {
-  socket.emit("getBarchartData", "boardgames_40");
+function getBarChartData() {
+  socket.emit("getBarChartData", "boardgames_40");
 }
 
 socket.on("receiveScatterPlotData", (data) => {

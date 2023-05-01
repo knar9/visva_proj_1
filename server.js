@@ -31,7 +31,7 @@ io.sockets.on("connection", (socket) => {
     });
   };
 
-  let getBarchartData = (parameters) => {
+  let getBarChartData = (parameters) => {
     console.log(`Received data request with these parameters: ${parameters}`);
     fs.readFile(`./data/${parameters}.json`, "utf8", (err, data) => {
       if (err) {
@@ -46,5 +46,5 @@ io.sockets.on("connection", (socket) => {
 
   socket.on("disconnect", disconnect);
   socket.on("getScatterPlotData", getScatterPlotData);
-  socket.on("getBarchartData", getBarchartData);
+  socket.on("getBarChartData", getBarChartData);
 });
