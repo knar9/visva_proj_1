@@ -14,9 +14,9 @@ svg {
 /* Grid-Layouting the Dashboard */
 body {
   display: grid;
-
   grid-template-areas: "header" "content";
   grid-template-rows: 100px auto;
+  grid-template-columns: 1 1;
 }
 
 /* Layouting and styling the Header */
@@ -37,7 +37,6 @@ body {
 /* Styling the logo */
 .logo {
   grid-area: logo;
-
   padding: 5px;
   cursor: pointer;
 }
@@ -45,6 +44,9 @@ body {
 .content {
   grid-area: content;
   padding: 15px;
+  flex-direction: row;
+  display: flex;
+  gap: 0px 100px;
 }
 
 /* Styling the buttons */
@@ -78,4 +80,14 @@ body {
   width: 460px;
   height: 400px;
   margin-top: 100px;
+  grid-column: 1;
+  grid-row: 2;
+}
+
+#barchart-plot {
+  width: 460px;
+  height: 400px;
+  margin-top: 100px;
+  grid-column: 2;
+  grid-row: 2;
 }

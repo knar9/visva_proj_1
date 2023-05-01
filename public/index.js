@@ -13,93 +13,105 @@ socket.on("disconnect", () => {
 });
 
 function createScatterplot(obj) {
-  let dataset = []
-  let datatuple = []
-  for(let i = 0; i<40; i++) {
-    datatuple.push((obj[i].minplaytime + obj[i].maxplaytime) / 2)
-    datatuple.push(obj[i].rating.rating)
-    if(datatuple[0] <= 180){
-      dataset.push(datatuple)
+  let dataset = [];
+  let datatuple = [];
+  for (let i = 0; i < 40; i++) {
+    datatuple.push((obj[i].minplaytime + obj[i].maxplaytime) / 2);
+    datatuple.push(obj[i].rating.rating);
+    if (datatuple[0] <= 180) {
+      dataset.push(datatuple);
     }
-    datatuple = []
-  } 
+    datatuple = [];
+  }
 
-  var margin = {top: 60, right: 60, bottom: 60, left: 60},
-      width = 460 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+  var margin = { top: 60, right: 60, bottom: 60, left: 60 },
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   d3.select("#my_dataviz > svg").remove();
-  var svg = d3.select("#my_dataviz")
+  var svg = d3
+    .select("#my_dataviz")
     .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .call(responsivefy)
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .call(responsivefy)
     .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
   // Title
-  svg.append('text')
-    .attr('x', width/2 )
-    .attr('y', -30)
-    .attr('text-anchor', 'middle')
-    .style('font-family', 'Helvetica')
-    .style('font-size', 20)
-    .text('Scatter Plot');
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", -30)
+    .attr("text-anchor", "middle")
+    .style("font-family", "Helvetica")
+    .style("font-size", 20)
+    .text("Scatter Plot");
 
   // Add X axis
-  var x = d3.scaleLinear()
-    .domain([0, 180])
-    .range([ 0, width ]);
-  svg.append("g")
+  var x = d3.scaleLinear().domain([0, 180]).range([0, width]);
+  svg
+    .append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x));
 
   // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([7.9, 8.7])
-    .range([ height, 0]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
-
+  var y = d3.scaleLinear().domain([7.9, 8.7]).range([height, 0]);
+  svg.append("g").call(d3.axisLeft(y));
 
   // X label
-  svg.append('text')
-    .attr('x', width/2 )
-    .attr('y', height + 40)
-    .attr('text-anchor', 'middle')
-    .style('font-family', 'Helvetica')
-    .style('font-size', 14)
-    .text('Average Game Length');
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height + 40)
+    .attr("text-anchor", "middle")
+    .style("font-family", "Helvetica")
+    .style("font-size", 14)
+    .text("Average Game Length");
 
   // Y label
-  svg.append('text')
-    .attr('text-anchor', 'middle')
-    .attr('transform', 'translate(-40,' + (height/2  )+  ')rotate(-90)')
-    .style('font-family', 'Helvetica')
-    .style('font-size', 14)
-    .text('Rating');
+  svg
+    .append("text")
+    .attr("text-anchor", "middle")
+    .attr("transform", "translate(-40," + height / 2 + ")rotate(-90)")
+    .style("font-family", "Helvetica")
+    .style("font-size", 14)
+    .text("Rating");
 
   // Add dots
-  svg.append('g')
+  svg
+    .append("g")
     .selectAll("dot")
     .data(dataset)
     .enter()
     .append("circle")
-    .attr("cx", (d) => { return x(d[0]); } )
-    .attr("cy", (d) => { return y(d[1]); } )
-    .attr("r", 4)
-    .style("fill", (d) => { 
-      return d[0] >= 20 && d[0] < 40 ? '#ade8f4'
-        : d[0] >= 40 && d[0] < 60 ? '#90e0ef'
-        : d[0] >= 60 && d[0] < 80 ? '#48cae4'
-        : d[0] >= 80 && d[0] < 100 ? '#00b4d8'
-        : d[0] >= 100 && d[0] < 120 ? '#0096c7'
-        : d[0] >= 120 && d[0] < 140 ? '#0077b6'
-        : d[0] >= 140 && d[0] < 160 ? '#023e8a'
-        : d[0] >= 160 && d[0] < 180 ? '#03045e' 
-        : '#03045e'
+    .attr("cx", (d) => {
+      return x(d[0]);
     })
+    .attr("cy", (d) => {
+      return y(d[1]);
+    })
+    .attr("r", 4)
+    .style("fill", (d) => {
+      return d[0] >= 20 && d[0] < 40
+        ? "#ade8f4"
+        : d[0] >= 40 && d[0] < 60
+        ? "#90e0ef"
+        : d[0] >= 60 && d[0] < 80
+        ? "#48cae4"
+        : d[0] >= 80 && d[0] < 100
+        ? "#00b4d8"
+        : d[0] >= 100 && d[0] < 120
+        ? "#0096c7"
+        : d[0] >= 120 && d[0] < 140
+        ? "#0077b6"
+        : d[0] >= 140 && d[0] < 160
+        ? "#023e8a"
+        : d[0] >= 160 && d[0] < 180
+        ? "#03045e"
+        : "#03045e";
+    });
 }
 
 function getUniqueMinimumAges(dataFile) {
@@ -125,105 +137,100 @@ function createBarChart(original_data) {
   }
   console.log(data);
 
-  // Set up the scales for the chart
-  const xScale = d3
-    .scaleBand()
-    .domain(data.map((d) => d.minAge))
-    .range([0, 400])
-    .padding(0.1);
-
-  const yScale = d3
-    .scaleLinear()
-    .domain([0, d3.max(data, (d) => d.frequency)])
-    .range([350, 0]);
-
-  // Set up the axes for the chart
-  const xAxis = d3.axisBottom(xScale);
-  const yAxis = d3.axisLeft(yScale);
+  var margin = { top: 60, right: 60, bottom: 60, left: 60 },
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
   // Add the bars to the chart
   d3.select("#barchart-plot > svg").remove;
   const svg = d3.select("#barchart-plot");
 
   // Title for Barchart
-  svg.append('text')
-  .attr('x', 200/2 )
-  .attr('y', 40)
-  .attr('text-anchor', 'middle')
-  .style('font-family', 'Helvetica')
-  .style('font-size', 20)
-  .text('Barchart Plot');
+  svg
+    .append("text")
+    .attr("x", 200 / 2)
+    .attr("y", 40)
+    .attr("text-anchor", "middle")
+    .style("font-family", "Helvetica")
+    .style("font-size", 20)
+    .text("Barchart Plot");
 
   const bars = svg
     .selectAll("rect")
     .data(data)
     .enter()
     .append("rect")
-    .attr("x", (d) => xScale(d.minAge))
-    .attr("y", (d) => yScale(d.frequency))
-    .attr("width", xScale.bandwidth())
-    .attr("height", (d) => 350 - yScale(d.frequency))
+    .attr("x", (d) => x(d.minAge))
+    .attr("y", (d) => y(d.frequency))
+    .attr("width", x.bandwidth())
+    .attr("height", (d) => 350 - y(d.frequency))
     .attr("fill", "steelblue");
 
+  // Add X axis
+  var x = d3
+    .scaleBand()
+    .domain(data.map((d) => d.minAge))
+    .range([0, width]);
+  svg
+    .append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+  // Add Y axis
+  var y = d3.scaleLinear().domain([0, 40]).range([height, 0]);
+  svg.append("g").call(d3.axisLeft(y));
+
   // X label
-  svg.append('text')
-  .attr('x', 200/2 )
-  .attr('y', 400 + 40)
-  .attr('text-anchor', 'middle')
-  .style('font-family', 'Helvetica')
-  .style('font-size', 14)
-  .text('Minimum Age');
+  svg
+    .append("text")
+    .attr("x", 200 / 2)
+    .attr("y", 400 + 40)
+    .attr("text-anchor", "middle")
+    .style("font-family", "Helvetica")
+    .style("font-size", 14)
+    .text("Minimum Age");
 
   // Y label
-  svg.append('text')
-    .attr('text-anchor', 'middle')
-    .attr('transform', 'translate(-40,' + (200/2  )+  ')rotate(-90)')
-    .style('font-family', 'Helvetica')
-    .style('font-size', 14)
-    .text('Frequency');
-
-  // Add the x-axis to the chart
-  svg.append("g").attr("transform", "translate(0, 350)").call(xAxis);
-
-  // Add the y-axis to the chart
-  svg.append("g").call(yAxis);
+  svg
+    .append("text")
+    .attr("text-anchor", "middle")
+    .attr("transform", "translate(-40," + 200 / 2 + ")rotate(-90)")
+    .style("font-family", "Helvetica")
+    .style("font-size", 14)
+    .text("Frequency");
 }
 
-function request_example_data(string) {
-  socket.emit("get_data", null);
+function getScatterPlotData() {
+  socket.emit("getScatterPlotData", "boardgames_40");
 }
-function getBoardGameData() {
-  socket.emit("get_data", "boardgames_40");
+function getBarchartData() {
+  socket.emit("getBarchartData", "boardgames_40");
 }
 
-socket.on("receiveData", (data) => {
-  //console.log(data);
+socket.on("receiveScatterPlotData", (data) => {
   createScatterplot(data);
+});
+
+socket.on("receiveBarchartData", (data) => {
   createBarChart(data);
 });
 
-function request_example_data(string) {
-  socket.emit("get_data", string)
-}
-
 function responsivefy(svg) {
   const container = d3.select(svg.node().parentNode),
-      width = parseInt(svg.style('width'), 10),
-      height = parseInt(svg.style('height'), 10),
-      aspect = width / height;
+    width = parseInt(svg.style("width"), 10),
+    height = parseInt(svg.style("height"), 10),
+    aspect = width / height;
 
-  svg.attr('viewBox', `0 0 ${width} ${height}`)
-      .attr('preserveAspectRatio', 'xMinYMid')
-      .call(resize);
- 
-  d3.select(window).on(
-      'resize.' + container.attr('id'), 
-      resize
-  );
- 
+  svg
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMinYMid")
+    .call(resize);
+
+  d3.select(window).on("resize." + container.attr("id"), resize);
+
   function resize() {
-      const w = parseInt(container.style('width'));
-      svg.attr('width', w);
-      svg.attr('height', Math.round(w / aspect));
+    const w = parseInt(container.style("width"));
+    svg.attr("width", w);
+    svg.attr("height", Math.round(w / aspect));
   }
 }

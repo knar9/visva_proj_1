@@ -18,7 +18,7 @@ io.sockets.on("connection", (socket) => {
     console.log(`Client ${socket.id} disconnected.`);
   };
 
-  let get_data = (parameters) => {
+  let getScatterPlotData = (parameters) => {
     console.log(`Received data request with these parameters: ${parameters}`);
     fs.readFile(`./data/${parameters}.json`, "utf8", (err, data) => {
       if (err) {
@@ -27,10 +27,24 @@ io.sockets.on("connection", (socket) => {
       }
       let json_data = JSON.parse(data);
       console.log(json_data);
-      socket.emit("receiveData", json_data);
+      socket.emit("receiveScatterPlotData", json_data);
+    });
+  };
+
+  let getBarchartData = (parameters) => {
+    console.log(`Received data request with these parameters: ${parameters}`);
+    fs.readFile(`./data/${parameters}.json`, "utf8", (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      let json_data = JSON.parse(data);
+      console.log(json_data);
+      socket.emit("receiveBarchartData", json_data);
     });
   };
 
   socket.on("disconnect", disconnect);
-  socket.on("get_data", get_data);
+  socket.on("getScatterPlotData", getScatterPlotData);
+  socket.on("getBarchartData", getBarchartData);
 });
