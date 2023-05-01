@@ -72,3 +72,9 @@ body {
   color: white;
   border-color: white;
 }
+
+#my_dataviz {
+  width: 460px;
+  height: 400px;
+  margin-top: 100px;
+}
