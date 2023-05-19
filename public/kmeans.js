@@ -1,4 +1,25 @@
+
 /* k-means implementation in 2D */
+
+/**
+ * k-means algorithm after Lloyd
+ * 
+ * @param {[{ x, y, centroid_index }, ...]} datapoints - given data points to calculate algorithm on, whereas the array contains the data points; centroid_index can be anything at the beginning.
+ * @param k - number of clusters
+ * @returns {[{ x, y, centroid_index }, ...]} datapoints - returns the datapoints with the final centroid_index.
+ */
+
+function kmeans(datapoints, k) {
+  let unchanged = false;
+  let centroids = get_random_centroids(datapoints, k);
+  let centroids_boolean = [[centroids], unchanged];
+  while (unchanged === false) {
+    datapoints = assign_datapoints_to_centroids(datapoints, centroids, euclid);
+    centroids_boolean = calculate_new_centroids(datapoints, centroids, mean);
+    unchanged = centroids_boolean.Boolean;
+  }
+}
+
 
 /**
  * Calculates the mean for x and y of the given data points.
@@ -63,12 +84,12 @@ function calculateMedianValue(sortedArray) {
  * Calculates the euclidian distance between two points in space.
  *
  * @param {{ x, y, centroid_index }} point1 - first point in space
- * @param {{ x, y, centroid_index }} point2 - second point in space
+ * @param {{ x, y}} point2 - second point in space
  * @returns {distance} - the distance of point1 and point2
  */
 function euclid(point1, point2) {
 
-  let distance = Math.sqrt((point1.x - point2.x)^2 - (point1.y - point2.y)^2);
+  let distance = Math.sqrt((point1.x - point2.x)**2 - (point1.y - point2.y)**2);
 
   return distance
 }
@@ -125,15 +146,16 @@ function assign_datapoints_to_centroids(
  */
 function calculate_new_centroids(datapoints, centroids, measure_function) {
   let centroids_changed = false
-  let arr = []
   let step = 0
   for(const centroid of centroids) {
-    let newDatapoints = filteredDatapoints(datapoints, step)
-    if(centroid == measure_function(newDatapoints)) {
+    let newDatapoints = filteredDatapoints(datapoints, step);
+    let new_centroid = measure_function(newDatapoints);
+    if(centroid === new_centroid) {
     } else {
-      centroid = measure_function(newDatapoints);
-      centroids_changed = true
+      centroids[step] = new_centroid;
+      centroids_changed = true;
     }
+    step += 1;
   }
   return { centroids, centroids_changed }
 }
@@ -141,13 +163,12 @@ function calculate_new_centroids(datapoints, centroids, measure_function) {
 function filteredDatapoints(datapoints, centroid_index) {
   let newDatapoints = [];
   for(const datapoint of datapoints) {
-    if(datapoints.centroid_index == centroid_index) {
+    if(datapoint.centroid_index === centroid_index) {
       newDatapoints.push(datapoint)
     } else {
-      newDatapoints.push({x:0, y: 0, centroid_index})
+      newDatapoints.push({x:0, y: 0, centroid_index: datapoint.centroid_index})
     }
   }
-
   return newDatapoints;
 }
 /**
@@ -160,9 +181,9 @@ function filteredDatapoints(datapoints, centroid_index) {
 function get_random_centroids(datapoints, k) {
   let centroids = []
   let maxValueX = Math.max(datapoints.x)
-  let minValueX = Math.max(datapoints.x)
+  let minValueX = Math.min(datapoints.x)
   let maxValueY = Math.max(datapoints.y)
-  let minValueY = Math.max(datapoints.y)
+  let minValueY = Math.min(datapoints.y)
 
   for (let i = 0; i < k; i++) {
     let randX = Math.random()*(maxValueX - minValueX) + minValueX;
