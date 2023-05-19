@@ -9,26 +9,46 @@ socket.on("disconnect", () => {
   console.log("Disconnected from the webserver.");
 });
 
+const cats = ['Abstract Strategy', 'Action / Dexterity', 'Adventure', 'American West', 'Ancient', 'Animals', 'Arabian', 'Bluffing', 
+  'Card Game', 'City Building', 'Civil War', 'Civilization', 'Collectible Components', 'Comic Book / Strip', 'Deduction', 'Dice', 
+  'Economic', 'Educational', 'Environmental', 'Exploration', 'Fantasy', 'Farming', 'Fighting', 'Horror', 'Industry / Manufacturing', 
+  'Mature / Adult', 'Medical', 'Medieval', 'Miniatures', 'Modern Warfare', 'Movies / TV / Radio theme', 'Murder/Mystery', 'Mythology', 
+  'Nautical', 'Negotiation', 'Novel-based', 'Pirates', 'Political', 'Post-Napoleonic', 'Prehistoric', 'Puzzle', 'Religious', 'Renaissance', 
+  'Science Fiction', 'Space Exploration', 'Spies/Secret Agents', 'Territory Building', 'Transportation', 'Travel', 'Video Game Theme', 'Wargame']
+
+function getCat() {
+  var x = document.getElementById("catNumber").value;
+  document.getElementById("giveCat").innerHTML = cats[x];
+}
+
 function createScatterplot(obj) {
   let dataset = [];
   let datatuple = [];
-  for (let i = 0; i < 40; i++) {
-    datatuple.push((obj[i].minplaytime + obj[i].maxplaytime) / 2);
-    datatuple.push(obj[i].rating.rating);
-    if (datatuple[0] <= 180) {
-      dataset.push(datatuple);
-    }
-    datatuple = [];
+  let temp = 0;
+  for (let i = 0; i < 100; i++) {
+    //datatuple.push((obj[i].minplaytime + obj[i].maxplaytime) / 2);
+    for (let j = 0; j < obj[i].types.categories.length; j++)  {
+      for (let k = 0; k < cats.length; k++) {
+        console.log(obj[i].types.categories[j].name)
+        if(obj[i].types.categories[j].name === cats[k]) {
+          datatuple.push(k + Math.random());
+          datatuple.push(obj[i].rating.rating);
+          dataset.push(datatuple);
+          datatuple = [];
+        }
+      }   
+    } 
   }
+  console.log(dataset)
 
   var margin = { top: 60, right: 60, bottom: 60, left: 60 },
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
-  d3.select("#my_dataviz > svg").remove();
+  d3.select("#scatterplot > svg").remove();
   var svg = d3
-    .select("#my_dataviz")
+    .select("#scatterplot")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -47,14 +67,14 @@ function createScatterplot(obj) {
     .text("Scatter Plot");
 
   // Add X axis
-  var x = d3.scaleLinear().domain([0, 180]).range([0, width]);
+  var x = d3.scaleLinear().domain([0, 51]).range([0, width]);
   svg
     .append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x));
 
   // Add Y axis
-  var y = d3.scaleLinear().domain([7.9, 8.7]).range([height, 0]);
+  var y = d3.scaleLinear().domain([7.6, 8.7]).range([height, 0]);
   svg.append("g").call(d3.axisLeft(y));
 
   // X label
@@ -89,26 +109,9 @@ function createScatterplot(obj) {
     .attr("cy", (d) => {
       return y(d[1]);
     })
-    .attr("r", 4)
-    .style("fill", (d) => {
-      return d[0] >= 20 && d[0] < 40
-        ? "#ade8f4"
-        : d[0] >= 40 && d[0] < 60
-        ? "#90e0ef"
-        : d[0] >= 60 && d[0] < 80
-        ? "#48cae4"
-        : d[0] >= 80 && d[0] < 100
-        ? "#00b4d8"
-        : d[0] >= 100 && d[0] < 120
-        ? "#0096c7"
-        : d[0] >= 120 && d[0] < 140
-        ? "#0077b6"
-        : d[0] >= 140 && d[0] < 160
-        ? "#023e8a"
-        : d[0] >= 160 && d[0] < 180
-        ? "#03045e"
-        : "#03045e";
-    });
+    .attr("r", 1)
+
+  document.getElementById('inputField').style.display = "block";
 }
 
 function getUniqueMinimumAges(dataFile) {
@@ -208,10 +211,10 @@ function createBarChart(original_data) {
 }
 
 function getScatterPlotData() {
-  socket.emit("getScatterPlotData", "boardgames_40");
+  socket.emit("getScatterPlotData", "boardgames_100");
 }
 function getBarChartData() {
-  socket.emit("getBarChartData", "boardgames_40");
+  socket.emit("getBarChartData", "boardgames_100");
 }
 
 socket.on("receiveScatterPlotData", (data) => {

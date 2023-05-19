@@ -76,12 +76,16 @@ body {
   border-color: white;
 }
 
-#my_dataviz {
+#scatterplot {
   width: 460px;
   height: 400px;
-  margin-top: 100px;
+  margin-top: 30px;
   grid-column: 1;
   grid-row: 2;
+}
+
+#inputField {
+  margin-left: 50px;
 }
 
 #barchart-plot {
