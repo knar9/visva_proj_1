@@ -9,6 +9,7 @@ socket.on("disconnect", () => {
   console.log("Disconnected from the webserver.");
 });
 
+
 const cats = ['Abstract Strategy', 'Action / Dexterity', 'Adventure', 'American West', 'Ancient', 'Animals', 'Arabian', 'Bluffing', 
   'Card Game', 'City Building', 'Civil War', 'Civilization', 'Collectible Components', 'Comic Book / Strip', 'Deduction', 'Dice', 
   'Economic', 'Educational', 'Environmental', 'Exploration', 'Fantasy', 'Farming', 'Fighting', 'Horror', 'Industry / Manufacturing', 
@@ -21,6 +22,14 @@ function getCat() {
   document.getElementById("giveCat").innerHTML = cats[x];
 }
 
+function transformDatapoints(datapoints) {
+  return datapoints.map(datapoint => ({
+    x: datapoint.x,  
+    y: datapoint.y, 
+    centroid_index: 0  
+  }));
+}
+
 function createScatterplot(obj) {
   let dataset = [];
   let datatuple = [];
@@ -29,7 +38,7 @@ function createScatterplot(obj) {
     //datatuple.push((obj[i].minplaytime + obj[i].maxplaytime) / 2);
     for (let j = 0; j < obj[i].types.categories.length; j++)  {
       for (let k = 0; k < cats.length; k++) {
-        console.log(obj[i].types.categories[j].name)
+        //console.log(obj[i].types.categories[j].name)
         if(obj[i].types.categories[j].name === cats[k]) {
           datatuple.push(k + Math.random());
           datatuple.push(obj[i].rating.rating);
@@ -39,7 +48,13 @@ function createScatterplot(obj) {
       }   
     } 
   }
-  console.log(dataset)
+
+
+  let test = dataset.map(({ 0: x, 1: y }) => ({ x, y : 50*y}));
+  test = transformDatapoints(test);
+
+  let test1 = kmeansAlgo(test, 5);
+  console.log(test1);
 
   var margin = { top: 60, right: 60, bottom: 60, left: 60 },
     width = 460 - margin.left - margin.right,
@@ -74,7 +89,7 @@ function createScatterplot(obj) {
     .call(d3.axisBottom(x));
 
   // Add Y axis
-  var y = d3.scaleLinear().domain([7.6, 8.7]).range([height, 0]);
+  var y = d3.scaleLinear().domain([380, 430]).range([height, 0]);
   svg.append("g").call(d3.axisLeft(y));
 
   // X label
@@ -100,16 +115,39 @@ function createScatterplot(obj) {
   svg
     .append("g")
     .selectAll("dot")
-    .data(dataset)
+    .data(test1)
     .enter()
     .append("circle")
     .attr("cx", (d) => {
-      return x(d[0]);
+      return x(d.x);
     })
     .attr("cy", (d) => {
-      return y(d[1]);
+      return y(d.y);
     })
-    .attr("r", 1)
+    .attr("r", 2)
+    .style("fill", (d) => {
+      if (d.centroid_index === 0) {
+        return "#FF0000";
+      } else if (d.centroid_index === 1) {
+        return "#FFA500";
+      } else if (d.centroid_index === 2) {
+        return "#FFFF00";
+      } else if (d.centroid_index === 3) {
+        return "#00FF00";
+      } else if (d.centroid_index === 4) {
+        return "#00FFFF";
+      } else if (d.centroid_index === 5) {
+        return "#0000FF";
+      } else if (d.centroid_index === 6) {
+        return "#FF00FF";
+      } else if (d.centroid_index === 7) {
+        return "#800080";
+      } else if (d.centroid_index === 8) {
+        return "#FFD700";
+      } else {
+        return "#00FF7F";
+      }
+    });
 
   document.getElementById('inputField').style.display = "block";
 }

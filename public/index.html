@@ -9,7 +9,12 @@
     <link href="main.css" rel="stylesheet" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="./index.js"></script>
+    <script src="./index.js">
+      const kmeans = require("./kmeans");
+    </script>
+    <script src="./kmeans.js">
+      module.exports = { kmeansAlgo, assign_datapoints_to_centroids };
+    </script>
   </head>
   <body>
     <div class="header">

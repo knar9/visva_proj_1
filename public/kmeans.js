@@ -9,15 +9,23 @@
  * @returns {[{ x, y, centroid_index }, ...]} datapoints - returns the datapoints with the final centroid_index.
  */
 
-function kmeans(datapoints, k) {
+function kmeansAlgo(datapoints, k) {
   let unchanged = false;
   let centroids = get_random_centroids(datapoints, k);
+
   let centroids_boolean = [[centroids], unchanged];
+  let temp = 0;
   while (unchanged === false) {
     datapoints = assign_datapoints_to_centroids(datapoints, centroids, euclid);
     centroids_boolean = calculate_new_centroids(datapoints, centroids, mean);
-    unchanged = centroids_boolean.Boolean;
+    //console.log(centroids_boolean)
+    unchanged = centroids_boolean.centroids_unchanged;
+    if(temp === 100){unchanged = true}
+    console.log(temp)
+    temp += 1;
+    
   }
+  return datapoints
 }
 
 
@@ -30,15 +38,16 @@ function kmeans(datapoints, k) {
 function mean(datapoints) {
   let sumX = 0;
   let sumY = 0;
+  let datapoints_length = 0
 
   for (let i = 0; i < datapoints.length; i++) {
     sumX += datapoints[i].x;
     sumY += datapoints[i].y;
+    if(datapoints[i].x === 0){ }else{ datapoints_length += 1}
   }
-
-  const meanX = sumX / datapoints.length;
-  const meanY = sumY / datapoints.length;
-
+  let meanX = sumX / datapoints_length;
+  let meanY = sumY / datapoints_length;
+  console.log({meanX, meanY})
   return { meanX, meanY };
 }
 
@@ -88,9 +97,7 @@ function calculateMedianValue(sortedArray) {
  * @returns {distance} - the distance of point1 and point2
  */
 function euclid(point1, point2) {
-
-  let distance = Math.sqrt((point1.x - point2.x)**2 - (point1.y - point2.y)**2);
-
+  let distance = Math.sqrt(((point1.x - point2.x)**2) + ((point1.y - point2.y)**2));
   return distance
 }
 
@@ -119,20 +126,20 @@ function assign_datapoints_to_centroids(
   centroids,
   distance_function
 ) {
-
   for (const datapoint of datapoints) {
     let distance = 999999999999;
     let step = 0;
+    let new_distance = 0;
     for(const centroid of centroids) {
-      let new_distance = distance_function(datapoint, centroid)
-      if(new_distance < distance){
+      new_distance = distance_function(datapoint, centroid)
+      if(new_distance - distance < 0){
         distance = new_distance;
         datapoint.centroid_index = step;
       }
       step += 1;
     }
+    //console.log({new_distance, datapoint});
   }
-
   return datapoints
 }
 
@@ -145,19 +152,20 @@ function assign_datapoints_to_centroids(
  * @returns {{[{ x, y }, ... ], Boolean}} - centroids with new positions, and true of at least one centroid position changed
  */
 function calculate_new_centroids(datapoints, centroids, measure_function) {
-  let centroids_changed = false
+  let centroids_unchanged = true
   let step = 0
   for(const centroid of centroids) {
     let newDatapoints = filteredDatapoints(datapoints, step);
     let new_centroid = measure_function(newDatapoints);
-    if(centroid === new_centroid) {
+    if(Math.abs(centroid.meanX - new_centroid.meanX) <= 0 && Math.abs(centroid.meanY - new_centroid.meanY) <= 0) {
     } else {
       centroids[step] = new_centroid;
-      centroids_changed = true;
+      centroids_unchanged = false;
     }
     step += 1;
   }
-  return { centroids, centroids_changed }
+  console.log(centroids)
+  return { centroids, centroids_unchanged }
 }
 
 function filteredDatapoints(datapoints, centroid_index) {
@@ -174,23 +182,24 @@ function filteredDatapoints(datapoints, centroid_index) {
 /**
  * Generates random centroids according to the data point boundaries and the specified k.
  *
- * @param {[{ x, y }, ...]} datapoints - all available data points
+ * @param {[{ x, y, centroid_index }, ...]} datapoints - all available data points
  * @param {Number} k - number of centroids to be generated as a Number
  * @returns {[{ x, y }, ...]} - generated centroids
  */
 function get_random_centroids(datapoints, k) {
   let centroids = []
-  let maxValueX = Math.max(datapoints.x)
-  let minValueX = Math.min(datapoints.x)
-  let maxValueY = Math.max(datapoints.y)
-  let minValueY = Math.min(datapoints.y)
+  let maxValueX = datapoints.reduce((max, point) => Math.max(max, point.x), -Infinity);
+  let minValueX = datapoints.reduce((min, point) => Math.min(min, point.x), Infinity);
+  let maxValueY = datapoints.reduce((max, point) => Math.max(max, point.y), -Infinity);
+  let minValueY = datapoints.reduce((min, point) => Math.min(min, point.y), Infinity);
 
   for (let i = 0; i < k; i++) {
     let randX = Math.random()*(maxValueX - minValueX) + minValueX;
     let randY = Math.random()*(maxValueY - minValueY) + minValueY;
-
     centroids.push({x: randX, y: randY})
   }
-
+  //centroids.push({x: 0, y: 380})
+  //centroids.push({x: 50, y: 440})
+  
   return centroids
-}
+  }
