@@ -50,12 +50,8 @@ function createScatterplot(obj) {
       }   
     } 
   }
-  console.log(dataset)
-
-
   let test = dataset.map(({ 0: x, 1: y, 2: centroid_index }) => ({ x, y: y*50, centroid_index}));
   test = transformDatapoints(test);
-  console.log(test)
 
   let test1 = kmeansAlgo(test, 5);
   //console.log(test1);

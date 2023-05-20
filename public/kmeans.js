@@ -34,7 +34,6 @@ function kmeansAlgo(datapoints, k) {
     unchanged = centroids_boolean.centroids_unchanged;
     if(temp === 100){unchanged = true}
     temp += 1;
-    console.log(temp)
   }
   return datapoints
 }
@@ -59,7 +58,6 @@ function mean(datapoints) {
 
   let x = sumX / datapoints_length;
   let y = sumY / datapoints_length;
-  console.log({x, y})
   return { x, y };
 }
 
@@ -218,6 +216,5 @@ function get_random_centroids(datapoints, k) {
   // centroids.push({x: 40, y: 405});
   // centroids.push({x: 50, y: 440});
   // centroids.push({x: 50, y: 385});
-  console.log(centroids)
   return centroids
   }
