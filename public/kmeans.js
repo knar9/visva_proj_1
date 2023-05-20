@@ -18,24 +18,23 @@ function abc(array){
 }
 
 function kmeansAlgo(datapoints, k) {
-  console.log(datapoints);
-  abc(datapoints)
   let unchanged = false;
-  const centroids = get_random_centroids(datapoints, k);
+  let centroids = get_random_centroids(datapoints, k);
   let centroids_boolean = [[centroids], unchanged];
 
   datapoints = assign_datapoints_to_centroids(datapoints, centroids, euclid);
   centroids_boolean = calculate_new_centroids(datapoints, centroids, mean);
+  unchanged = centroids_boolean.centroids_unchanged;
 
   let temp = 0;
 
   while (unchanged === false) {
-    datapoints = assign_datapoints_to_centroids(datapoints, centroids_boolean.new_centroids, euclid);
-    centroids_boolean = calculate_new_centroids(datapoints, centroids_boolean.new_centroids, mean);
+    datapoints = assign_datapoints_to_centroids(datapoints, centroids_boolean.centroids, euclid);
+    centroids_boolean = calculate_new_centroids(datapoints, centroids_boolean.centroids, mean);
     unchanged = centroids_boolean.centroids_unchanged;
-    if(temp === 0){unchanged = true}
+    if(temp === 100){unchanged = true}
     temp += 1;
-    //console.log(temp)
+    console.log(temp)
   }
   return datapoints
 }
@@ -45,20 +44,23 @@ function kmeansAlgo(datapoints, k) {
  * Calculates the mean for x and y of the given data points.
  *
  * @param {[{ x, y, centroid_index }, ...]} datapoints - given data points to calculate measure on, whereas the array contains the data points; centroid_index is not needed here, but is part of the default data structure
- * @returns {{meanX, meanY}} - the measure (here: mean)
+ * @returns {{x, y}} - the measure (here: mean)
  */
 function mean(datapoints) {
+  
   let sumX = 0;
   let sumY = 0;
   let datapoints_length = 0
   for (let i = 0; i < datapoints.length; i++) {
     sumX += datapoints[i].x;
     sumY += datapoints[i].y;
-    if(datapoints[i].x === 0){ }else{ datapoints_length += 1}
+    if(datapoints[i].x !== 0){datapoints_length += 1}
   }
-  let meanX = sumX / datapoints_length;
-  let meanY = sumY / datapoints_length;
-  return { meanX, meanY };
+
+  let x = sumX / datapoints_length;
+  let y = sumY / datapoints_length;
+  console.log({x, y})
+  return { x, y };
 }
 
 /**
@@ -142,9 +144,10 @@ function assign_datapoints_to_centroids(
     let step = 0;
     let new_distance = 0;
 
+    
     for(const centroid of centroids) {
       new_distance = distance_function(datapoint, centroid)
-      if(new_distance - distance < 0){
+      if(new_distance < distance){
         distance = new_distance;
         datapoints[count].centroid_index = step;
       }
@@ -166,21 +169,20 @@ function assign_datapoints_to_centroids(
 function calculate_new_centroids(datapoints, centroids, measure_function) {
   let centroids_unchanged = true
   let step = 0
-  let new_centroids = [];
+  //let new_centroids = [];
   for(let centroid of centroids) {
     let newDatapoints = filteredDatapoints(datapoints, step);
     let new_centroid = measure_function(newDatapoints);
-    if(Math.abs(centroid.meanX - new_centroid.meanX) <= 0 && Math.abs(centroid.meanY - new_centroid.meanY) <= 0) {
-      new_centroids.push(centroid);
-    } else {
-      new_centroids.push(new_centroid);
-      //console.log("ich war hier:", new_centroid)
-      //centroids[step] = new_centroid
+    
+    if(Math.abs(centroid.x - new_centroid.x) !== 0 && Math.abs(centroid.y - new_centroid.y) !== 0) {
+      centroid.x = new_centroid.x
+      centroid.y = new_centroid.y
       centroids_unchanged = false;
     }
     step += 1;
   }
-  return { new_centroids, centroids_unchanged }
+
+  return { centroids, centroids_unchanged }
 }
 
 function filteredDatapoints(datapoints, centroid_index) {
@@ -209,12 +211,13 @@ function get_random_centroids(datapoints, k) {
   let minValueY = datapoints.reduce((min, point) => Math.min(min, point.y), Infinity);
 
   for (let i = 0; i < k; i++) {
-    //let randX = Math.random()*(maxValueX - minValueX) + minValueX;
-    //let randY = Math.random()*(maxValueY - minValueY) + minValueY;
-    //centroids.push({x: randX, y: randY})
+    let randX = Math.random()*(maxValueX - minValueX) + minValueX;
+    let randY = Math.random()*(maxValueY - minValueY) + minValueY;
+    centroids.push({x: randX, y: randY})
   }
-  centroids.push({x: 40, y: 405});
-  centroids.push({x: 50, y: 440});
-  centroids.push({x: 50, y: 385});
+  // centroids.push({x: 40, y: 405});
+  // centroids.push({x: 50, y: 440});
+  // centroids.push({x: 50, y: 385});
+  console.log(centroids)
   return centroids
   }

@@ -26,7 +26,7 @@ function transformDatapoints(datapoints) {
   return datapoints.map(datapoint => ({
     x: datapoint.x,  
     y: datapoint.y, 
-    centroid_index: 0  
+    centroid_index: datapoint.centroid_index  
   }));
 }
 
@@ -40,21 +40,27 @@ function createScatterplot(obj) {
       for (let k = 0; k < cats.length; k++) {
         //console.log(obj[i].types.categories[j].name)
         if(obj[i].types.categories[j].name === cats[k]) {
-          datatuple.push(k + Math.random());
+          //datatuple.push(k + Math.random());
+          datatuple.push(k);
           datatuple.push(obj[i].rating.rating);
+          datatuple.push(0);
           dataset.push(datatuple);
           datatuple = [];
         }
       }   
     } 
   }
+  console.log(dataset)
 
 
-  let test = dataset.map(({ 0: x, 1: y }) => ({ x, y : 50*y}));
+  let test = dataset.map(({ 0: x, 1: y, 2: centroid_index }) => ({ x, y: y*50, centroid_index}));
   test = transformDatapoints(test);
+  console.log(test)
 
-  let test1 = kmeansAlgo(test, 3);
-  console.log(test1);
+  let test1 = kmeansAlgo(test, 5);
+  //console.log(test1);
+
+  test1 = test1.map(({x, y, centroid_index }) => ({ x, y: y/50, centroid_index}))
 
   var margin = { top: 60, right: 60, bottom: 60, left: 60 },
     width = 460 - margin.left - margin.right,
@@ -89,7 +95,7 @@ function createScatterplot(obj) {
     .call(d3.axisBottom(x));
 
   // Add Y axis
-  var y = d3.scaleLinear().domain([380, 430]).range([height, 0]);
+  var y = d3.scaleLinear().domain([7.65, 8.7]).range([height, 0]);
   svg.append("g").call(d3.axisLeft(y));
 
   // X label
