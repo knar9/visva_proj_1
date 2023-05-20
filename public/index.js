@@ -53,7 +53,7 @@ function createScatterplot(obj) {
   let test = dataset.map(({ 0: x, 1: y }) => ({ x, y : 50*y}));
   test = transformDatapoints(test);
 
-  let test1 = kmeansAlgo(test, 5);
+  let test1 = kmeansAlgo(test, 3);
   console.log(test1);
 
   var margin = { top: 60, right: 60, bottom: 60, left: 60 },
