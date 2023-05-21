@@ -11,9 +11,13 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="./index.js">
       const kmeans = require("./kmeans");
+      const lda = require("./lda");
     </script>
     <script src="./kmeans.js">
       module.exports = { kmeansAlgo, assign_datapoints_to_centroids };
+    </script>
+    <script src="./lda.js">
+      module.exports = { preprocess_data, normalize_data };
     </script>
   </head>
   <body>
@@ -30,6 +34,9 @@
         </button>
         <button class="function_button" onclick="getBarChartData()">
           Barchart
+        </button>
+        <button class="function_button" onclick="getDataForLDA()">
+          LDA
         </button>
       </div>
     </div>

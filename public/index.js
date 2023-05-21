@@ -249,12 +249,21 @@ function createBarChart(original_data) {
   .attr("height", (d) => height - y(d.frequency))
   .attr("fill", "steelblue");
 }
+function createLDA(original_data) {
+  let preprocessedData = preprocess_data(original_data)
+  console.log(preprocessedData)
 
+  let normalizedData = normalize_data(preprocessedData)
+  console.log(normalizedData)
+}
 function getScatterPlotData() {
   socket.emit("getScatterPlotData", "boardgames_100");
 }
 function getBarChartData() {
   socket.emit("getBarChartData", "boardgames_100");
+}
+function getDataForLDA() {
+  socket.emit("getDataForLDA", "boardgames_100");
 }
 
 socket.on("receiveScatterPlotData", (data) => {
@@ -263,6 +272,10 @@ socket.on("receiveScatterPlotData", (data) => {
 
 socket.on("receiveBarchartData", (data) => {
   createBarChart(data);
+});
+
+socket.on("receiveDataForLDA", (data) => {
+  createLDA(data);
 });
 
 function responsivefy(svg) {
