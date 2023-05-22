@@ -8,6 +8,9 @@
     <link rel="icon" type="image/x-icon" href="visva_sitelogo_no_white.png" />
     <link href="main.css" rel="stylesheet" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- <script src="https://unpkg.com/@saehrimnir/druidjs"></script> --> 
+    <!-- doesn't work -->
+    <script src="./druid.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./index.js">
       const kmeans = require("./kmeans");
@@ -50,6 +53,7 @@
         </div>
       </div>
       <div id="barchart-plot"></div>
+      <div id="lda-visualisation"></div>
     </div>
   </body>
 </html>

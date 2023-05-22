@@ -9,13 +9,59 @@ socket.on("disconnect", () => {
   console.log("Disconnected from the webserver.");
 });
 
-
-const cats = ['Abstract Strategy', 'Action / Dexterity', 'Adventure', 'American West', 'Ancient', 'Animals', 'Arabian', 'Bluffing', 
-  'Card Game', 'City Building', 'Civil War', 'Civilization', 'Collectible Components', 'Comic Book / Strip', 'Deduction', 'Dice', 
-  'Economic', 'Educational', 'Environmental', 'Exploration', 'Fantasy', 'Farming', 'Fighting', 'Horror', 'Industry / Manufacturing', 
-  'Mature / Adult', 'Medical', 'Medieval', 'Miniatures', 'Modern Warfare', 'Movies / TV / Radio theme', 'Murder/Mystery', 'Mythology', 
-  'Nautical', 'Negotiation', 'Novel-based', 'Pirates', 'Political', 'Post-Napoleonic', 'Prehistoric', 'Puzzle', 'Religious', 'Renaissance', 
-  'Science Fiction', 'Space Exploration', 'Spies/Secret Agents', 'Territory Building', 'Transportation', 'Travel', 'Video Game Theme', 'Wargame']
+const cats = [
+  "Abstract Strategy",
+  "Action / Dexterity",
+  "Adventure",
+  "American West",
+  "Ancient",
+  "Animals",
+  "Arabian",
+  "Bluffing",
+  "Card Game",
+  "City Building",
+  "Civil War",
+  "Civilization",
+  "Collectible Components",
+  "Comic Book / Strip",
+  "Deduction",
+  "Dice",
+  "Economic",
+  "Educational",
+  "Environmental",
+  "Exploration",
+  "Fantasy",
+  "Farming",
+  "Fighting",
+  "Horror",
+  "Industry / Manufacturing",
+  "Mature / Adult",
+  "Medical",
+  "Medieval",
+  "Miniatures",
+  "Modern Warfare",
+  "Movies / TV / Radio theme",
+  "Murder/Mystery",
+  "Mythology",
+  "Nautical",
+  "Negotiation",
+  "Novel-based",
+  "Pirates",
+  "Political",
+  "Post-Napoleonic",
+  "Prehistoric",
+  "Puzzle",
+  "Religious",
+  "Renaissance",
+  "Science Fiction",
+  "Space Exploration",
+  "Spies/Secret Agents",
+  "Territory Building",
+  "Transportation",
+  "Travel",
+  "Video Game Theme",
+  "Wargame",
+];
 
 function getCat() {
   var x = document.getElementById("catNumber").value;
@@ -23,10 +69,10 @@ function getCat() {
 }
 
 function transformDatapoints(datapoints) {
-  return datapoints.map(datapoint => ({
-    x: datapoint.x,  
-    y: datapoint.y, 
-    centroid_index: datapoint.centroid_index  
+  return datapoints.map((datapoint) => ({
+    x: datapoint.x,
+    y: datapoint.y,
+    centroid_index: datapoint.centroid_index,
   }));
 }
 
@@ -36,10 +82,10 @@ function createScatterplot(obj) {
   let temp = 0;
   for (let i = 0; i < 100; i++) {
     //datatuple.push((obj[i].minplaytime + obj[i].maxplaytime) / 2);
-    for (let j = 0; j < obj[i].types.categories.length; j++)  {
+    for (let j = 0; j < obj[i].types.categories.length; j++) {
       for (let k = 0; k < cats.length; k++) {
         //console.log(obj[i].types.categories[j].name)
-        if(obj[i].types.categories[j].name === cats[k]) {
+        if (obj[i].types.categories[j].name === cats[k]) {
           //datatuple.push(k + Math.random());
           datatuple.push(k);
           datatuple.push(obj[i].rating.rating);
@@ -47,16 +93,24 @@ function createScatterplot(obj) {
           dataset.push(datatuple);
           datatuple = [];
         }
-      }   
-    } 
+      }
+    }
   }
-  let test = dataset.map(({ 0: x, 1: y, 2: centroid_index }) => ({ x, y: y*50, centroid_index}));
+  let test = dataset.map(({ 0: x, 1: y, 2: centroid_index }) => ({
+    x,
+    y: y * 50,
+    centroid_index,
+  }));
   test = transformDatapoints(test);
 
   let test1 = kmeansAlgo(test, 5);
   //console.log(test1);
 
-  test1 = test1.map(({x, y, centroid_index }) => ({ x, y: y/50, centroid_index}))
+  test1 = test1.map(({ x, y, centroid_index }) => ({
+    x,
+    y: y / 50,
+    centroid_index,
+  }));
 
   var margin = { top: 60, right: 60, bottom: 60, left: 60 },
     width = 460 - margin.left - margin.right,
@@ -151,7 +205,7 @@ function createScatterplot(obj) {
       }
     });
 
-  document.getElementById('inputField').style.display = "block";
+  document.getElementById("inputField").style.display = "block";
 }
 
 function getUniqueMinimumAges(dataFile) {
@@ -192,7 +246,6 @@ function createBarChart(original_data) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
   // Title for Barchart
   svg
     .append("text")
@@ -203,7 +256,7 @@ function createBarChart(original_data) {
     .style("font-size", 20)
     .text("Bar Chart");
 
-  // Add X axis 
+  // Add X axis
   var x = d3
     .scaleBand()
     .domain(data.map((d) => d.minAge))
@@ -239,23 +292,110 @@ function createBarChart(original_data) {
 
   // Show the bars
   svg
-  .selectAll("rect")
-  .data(data)
-  .enter()
-  .append("rect")
-  .attr("x", (d) => x(d.minAge))
-  .attr("y", (d) => y(d.frequency))
-  .attr("width", x.bandwidth())
-  .attr("height", (d) => height - y(d.frequency))
-  .attr("fill", "steelblue");
+    .selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", (d) => x(d.minAge))
+    .attr("y", (d) => y(d.frequency))
+    .attr("width", x.bandwidth())
+    .attr("height", (d) => height - y(d.frequency))
+    .attr("fill", "steelblue");
 }
-function createLDA(original_data) {
-  let preprocessedData = preprocess_data(original_data)
-  console.log(preprocessedData)
 
-  let normalizedData = normalize_data(preprocessedData)
-  console.log(normalizedData)
+
+function createLDA(original_data) {  
+  let preprocessedData = preprocess_data(original_data);
+  // console.log(preprocessedData);
+
+  let normalizedData = normalize_data(preprocessedData);
+  // console.log(normalizedData);
+
+  let reducedDimensionData = LDA(normalizedData);
+  console.log(reducedDimensionData);
+
+  var margin = { top: 60, right: 60, bottom: 60, left: 60 },
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  d3.select("#lda-visualisation > svg").remove();
+  var svg = d3
+    .select("#lda-visualisation")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .call(responsivefy)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  // Title for LDA
+  svg
+  .append("text")
+  .attr("x", width / 2)
+  .attr("y", -30)
+  .attr("text-anchor", "middle")
+  .style("font-family", "Helvetica")
+  .style("font-size", 20)
+  .text("LDA Visualization");
+
+  let Y = reducedDimensionData.data;
+  // Add X axis
+  var x = d3.scaleLinear().domain([ -0.8776085949743329, 0.011193342638669383]).range([0, width]);
+  svg
+    .append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+  // Add Y axis
+  var y = d3.scaleLinear().domain([-1.0292134860952218, -0.3472996619614296]).range([height, 0]);
+  svg.append("g").call(d3.axisLeft(y));
+
+  color = d3.scaleOrdinal(d3.schemeDark2)
+  shape = d3.scaleOrdinal(d3.symbols.map(s => d3.symbol().size(20).type(s)()))
+  const gs = svg.selectAll(".point")
+    .data(Y)
+    .enter()
+    .append("g")
+      .attr("class", "point")
+      .attr("fill", "none")
+      .attr("stroke", (d, i) => color(reducedDimensionData.classes[i]))
+
+  gs.append("path")
+    .attr("d", (d, i) => shape("circle"))
+
+  svg.selectAll(".point")
+    .data(Y)
+    .attr("transform", (([px, py], i) => `translate(${x(px)}, ${y(py)})`))
+
+  // Adding Legends
+  const legend = svg.append("g")
+  .attr("class", "legend")
+  .attr("transform", "translate(" + (width + 20) + "," + (0) + ")");
+
+  const categories = [...new Set(reducedDimensionData.classes)];
+
+  const legendItems = legend.selectAll(".legend-item")
+    .data(categories)
+    .enter()
+    .append("g")
+    .attr("class", "legend-item")
+    .attr("transform", (d, i) => "translate(0," + (i * 20) + ")");
+
+  legendItems.append("circle")
+    .attr("cx", 0)
+    .attr("cy", 0)
+    .attr("r", 5)
+    .attr("fill", d => color(d));
+
+  legendItems.append("text")
+    .attr("x", 20)
+    .attr("y", 5)
+    .text(d => d);
+
+
 }
+
 function getScatterPlotData() {
   socket.emit("getScatterPlotData", "boardgames_100");
 }
