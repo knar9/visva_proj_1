@@ -105,18 +105,16 @@ function findMinMax(array, property) {
   return { min: minValue, max: maxValue };
 }
 
-function LDA(normalized_data) {
+function LDA(normalized_data, paramsToinclude) {
   let array = normalized_data.map((d) => {
-    return [
-      d.year,
-      d.rank,
-      d.minplayers,
-      d.maxplayers,
-      d.minplaytime,
-      d.maxplaytime,
-      d.minage,
-      d.rating,
-    ];
+    const arr = []
+
+    for (const entry of paramsToinclude.entries()) {
+      // console.log(entry);
+      arr.push(d[entry[0]]);
+    }
+
+    return arr;
   });
 
   let classes = normalized_data.map((d) => {
@@ -140,19 +138,6 @@ function LDA(normalized_data) {
 
   const reductionLDA = new druid.LDA(X, { labels: classes, d: 2 }); //2 dimensions, can use more.
   const result = reductionLDA.transform();
-
-  console.log(result.to2dArray);
-  let temp = result.to2dArray.map( (d) => {
-    return {
-      "0": d[0],
-      "1": d[1]
-    }
-  })
-
-  console.log("0 column min max")
-  console.log(findMinMax(temp, "0"))
-  console.log("1 column min max")
-  console.log(findMinMax(temp, "1"))
 
   return {
     classes: classes,

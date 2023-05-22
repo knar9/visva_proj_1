@@ -9,6 +9,18 @@ socket.on("disconnect", () => {
   console.log("Disconnected from the webserver.");
 });
 
+var ldaParameters = new Set(
+  ["year",
+  "rank",
+  "minplayers",
+  "maxplayers",
+  "minplaytime",
+  "maxplaytime",
+  "minage",
+  "rating",]
+)
+var ldaOriginalDataCache = []
+
 const cats = [
   "Abstract Strategy",
   "Action / Dexterity",
@@ -311,8 +323,7 @@ function createLDA(original_data) {
   let normalizedData = normalize_data(preprocessedData);
   // console.log(normalizedData);
 
-  let reducedDimensionData = LDA(normalizedData);
-  console.log(reducedDimensionData);
+  let reducedDimensionData = LDA(normalizedData, ldaParameters);
 
   var margin = { top: 60, right: 60, bottom: 60, left: 60 },
     width = 460 - margin.left - margin.right,
@@ -339,16 +350,27 @@ function createLDA(original_data) {
   .style("font-size", 20)
   .text("LDA Visualization");
 
+  console.log(reducedDimensionData.data.to2dArray);
+  let temp = reducedDimensionData.data.to2dArray.map( (d) => {
+    return {
+      "x": d[0],
+      "y": d[1]
+    }
+  })
+
+  console.log("min", d3.min(temp, d=> d.x));
+  console.log("max", d3.max(temp, d=> d.x));
+
   let Y = reducedDimensionData.data;
   // Add X axis
-  var x = d3.scaleLinear().domain([ -0.8776085949743329, 0.011193342638669383]).range([0, width]);
+  var x = d3.scaleLinear().domain([ d3.min(temp, d=> d.x), d3.max(temp, d=> d.x)]).range([0, width]);
   svg
     .append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x));
 
   // Add Y axis
-  var y = d3.scaleLinear().domain([-1.0292134860952218, -0.3472996619614296]).range([height, 0]);
+  var y = d3.scaleLinear().domain([d3.min(temp, d=> d.y), d3.max(temp, d=> d.y)]).range([height, 0]);
   svg.append("g").call(d3.axisLeft(y));
 
   color = d3.scaleOrdinal(d3.schemeDark2)
@@ -396,6 +418,71 @@ function createLDA(original_data) {
 
 }
 
+function ldaParameterUpdate() {
+  console.log("Params before:", ldaParameters);
+
+  const yearOptionCheckbox = document.getElementById("year");
+  if (yearOptionCheckbox.checked) {
+    ldaParameters.add("year")
+  } else {
+    ldaParameters.delete("year")
+  }
+
+  const rankOptionCheckbox = document.getElementById("rank");
+  if (rankOptionCheckbox.checked) {
+    ldaParameters.add("rank")
+  } else {
+    ldaParameters.delete("rank")
+  }
+
+  const minplayersOptionCheckbox = document.getElementById("minplayers");
+  if (minplayersOptionCheckbox.checked) {
+    ldaParameters.add("minplayers")
+  } else {
+    ldaParameters.delete("minplayers")
+  }
+
+  const maxplayersOptionCheckbox = document.getElementById("maxplayers");
+  if (maxplayersOptionCheckbox.checked) {
+    ldaParameters.add("maxplayers")
+  } else {
+    ldaParameters.delete("maxplayers")
+  }
+
+  const minplaytimeOptionCheckbox = document.getElementById("minplaytime");
+  if (minplaytimeOptionCheckbox.checked) {
+    ldaParameters.add("minplaytime")
+  } else {
+    ldaParameters.delete("minplaytime")
+  }
+
+  const maxplaytimeOptionCheckbox = document.getElementById("maxplaytime");
+  if (maxplaytimeOptionCheckbox.checked) {
+    ldaParameters.add("maxplaytime")
+  } else {
+    ldaParameters.delete("maxplaytime")
+  }
+
+  const minageOptionCheckbox = document.getElementById("minage");
+  if (minageOptionCheckbox.checked) {
+    ldaParameters.add("minage")
+  } else {
+    ldaParameters.delete("minage")
+  }
+
+  const ratingOptionCheckbox = document.getElementById("rating");
+  if (ratingOptionCheckbox.checked) {
+    ldaParameters.add("rating")
+  } else {
+    ldaParameters.delete("rating")
+  }
+
+  console.log("Params after:", ldaParameters)
+  console.log("With Cache:", ldaOriginalDataCache)
+
+  createLDA(ldaOriginalDataCache);
+}
+
 function getScatterPlotData() {
   socket.emit("getScatterPlotData", "boardgames_100");
 }
@@ -415,6 +502,7 @@ socket.on("receiveBarchartData", (data) => {
 });
 
 socket.on("receiveDataForLDA", (data) => {
+  ldaOriginalDataCache = data;
   createLDA(data);
 });
 

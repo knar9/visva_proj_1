@@ -53,7 +53,44 @@
         </div>
       </div>
       <div id="barchart-plot"></div>
-      <div id="lda-visualisation"></div>
+      <div class="content">
+        <form >
+          <label for="year">
+            <input type="checkbox" id="year" checked> Year
+          </label>
+      
+          <label for="rank">
+            <input type="checkbox" id="rank" checked> Rank
+          </label>
+
+          <label for="minplayers">
+            <input type="checkbox" id="minplayers" checked> Min Players
+          </label>
+
+          <label for="maxplayers">
+            <input type="checkbox" id="maxplayers" checked> Max Players
+          </label>
+
+          <label for="minplaytime">
+            <input type="checkbox" id="minplaytime" checked> Min Playtime
+          </label>
+
+          <label for="maxplaytime">
+            <input type="checkbox" id="maxplaytime" checked> Max Playtime
+          </label>
+
+          <label for="minage">
+            <input type="checkbox" id="minage" checked> Min Age
+          </label>
+
+          <label for="rating">
+            <input type="checkbox" id="rating" checked> Rating
+          </label>
+          
+          <button type="button" onclick="ldaParameterUpdate()">Submit</button>
+        </form>
+        <div id="lda-visualisation"></div>
+      </div>
     </div>
   </body>
 </html>
