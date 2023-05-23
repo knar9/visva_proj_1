@@ -2,6 +2,9 @@
 // https://socket.io/docs/v4/client -installation/#standalone -build
 const socket = io();
 
+let plotted = false;
+let changed = false;
+
 socket.on("connect", () => {
   console.log("Connected to the webserver.");
 });
@@ -34,7 +37,7 @@ function createScatterplot(obj) {
   let dataset = [];
   let datatuple = [];
   let temp = 0;
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < obj.length; i++) {
     //datatuple.push((obj[i].minplaytime + obj[i].maxplaytime) / 2);
     for (let j = 0; j < obj[i].types.categories.length; j++)  {
       for (let k = 0; k < cats.length; k++) {
@@ -250,9 +253,24 @@ function createBarChart(original_data) {
   .attr("fill", "steelblue");
 }
 
-function getScatterPlotData() {
-  socket.emit("getScatterPlotData", "boardgames_100");
+function changeScatterPlotData() {
+  if(plotted === true){
+    if(changed === false){
+      changed = true
+      socket.emit("getScatterPlotData", "boardgames_40");
+    }
+    else {
+      changed = false
+    socket.emit("getScatterPlotData", "boardgames_100");
+    }
+  }
 }
+
+function getScatterPlotData() {
+  plotted = true;
+    socket.emit("getScatterPlotData", "boardgames_100");
+}
+
 function getBarChartData() {
   socket.emit("getBarChartData", "boardgames_100");
 }
