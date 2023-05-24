@@ -8,7 +8,7 @@
     <link rel="icon" type="image/x-icon" href="visva_sitelogo_no_white.png" />
     <link href="main.css" rel="stylesheet" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- <script src="https://unpkg.com/@saehrimnir/druidjs"></script> --> 
+    <!-- <script src="https://unpkg.com/@saehrimnir/druidjs"></script> -->
     <!-- doesn't work -->
     <script src="./druid.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -38,59 +38,57 @@
         <button class="function_button" onclick="getBarChartData()">
           Barchart
         </button>
-        <button class="function_button" onclick="getDataForLDA()">
-          LDA
-        </button>
+        <button class="function_button" onclick="getDataForLDA()">LDA</button>
       </div>
     </div>
-      <div class="content">
-        <div id="scatterplot">
-          <div id="inputField" style="display:none;">
-            <input type="text" id="catNumber" placeholder="x-Axis number">
-            <p>Input the a-Axis number to get the category</p>
-            <button onclick="getCat()">Get Cat</button>
-            <p id="giveCat"></p>
+    <div class="content">
+      <div id="scatterplot">
+        <div id="inputField" style="display: none">
+          <input type="text" id="catNumber" placeholder="x-Axis number" />
+          <p>Input the a-Axis number to get the category</p>
+          <button onclick="getCat()">Get Cat</button>
+          <p id="giveCat"></p>
         </div>
       </div>
       <div id="barchart-plot"></div>
       <div class="content">
-        <form >
+        <form>
           <label for="year">
-            <input type="checkbox" id="year" checked> Year
+            <input type="checkbox" id="year" checked /> Year
           </label>
-      
+
           <label for="rank">
-            <input type="checkbox" id="rank" checked> Rank
+            <input type="checkbox" id="rank" checked /> Rank
           </label>
 
           <label for="minplayers">
-            <input type="checkbox" id="minplayers" checked> Min Players
+            <input type="checkbox" id="minplayers" checked /> Min Players
           </label>
 
           <label for="maxplayers">
-            <input type="checkbox" id="maxplayers" checked> Max Players
+            <input type="checkbox" id="maxplayers" checked /> Max Players
           </label>
 
           <label for="minplaytime">
-            <input type="checkbox" id="minplaytime" checked> Min Playtime
+            <input type="checkbox" id="minplaytime" checked /> Min Playtime
           </label>
 
           <label for="maxplaytime">
-            <input type="checkbox" id="maxplaytime" checked> Max Playtime
+            <input type="checkbox" id="maxplaytime" checked /> Max Playtime
           </label>
 
           <label for="minage">
-            <input type="checkbox" id="minage" checked> Min Age
+            <input type="checkbox" id="minage" checked /> Min Age
           </label>
 
           <label for="rating">
-            <input type="checkbox" id="rating" checked> Rating
+            <input type="checkbox" id="rating" checked /> Rating
           </label>
-          
+
           <button type="button" onclick="ldaParameterUpdate()">Submit</button>
         </form>
-        <div id="lda-visualisation"></div>
       </div>
     </div>
+    <div id="lda-visualisation"></div>
   </body>
 </html>
