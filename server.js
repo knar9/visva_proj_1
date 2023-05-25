@@ -18,7 +18,7 @@ io.sockets.on("connection", (socket) => {
     console.log(`Client ${socket.id} disconnected.`);
   };
 
-  let getScatterPlotData = (parameters) => {
+  let getScatterPlotData = (parameters, plotted) => {
     console.log(`Received data request with these parameters: ${parameters}`);
     fs.readFile(`./data/${parameters}.json`, "utf8", (err, data) => {
       if (err) {
@@ -27,7 +27,7 @@ io.sockets.on("connection", (socket) => {
       }
       let json_data = JSON.parse(data);
       console.log(json_data);
-      socket.emit("receiveScatterPlotData", json_data);
+      socket.emit("receiveScatterPlotData", json_data, plotted);
     });
   };
 
