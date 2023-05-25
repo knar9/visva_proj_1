@@ -150,7 +150,7 @@ function createScatterplot(obj) {
     .attr("text-anchor", "middle")
     .style("font-family", "Helvetica")
     .style("font-size", 20)
-    .text("Scatter Plot");
+    .text("k-means");
 
   // Add X axis
   var x = d3.scaleLinear().domain([0, 51]).range([0, width]);
@@ -171,7 +171,7 @@ function createScatterplot(obj) {
     .attr("text-anchor", "middle")
     .style("font-family", "Helvetica")
     .style("font-size", 14)
-    .text("Average Game Length");
+    .text("categorys");
 
   // Y label
   svg
