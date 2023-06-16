@@ -18,16 +18,15 @@ io.sockets.on("connection", (socket) => {
     console.log(`Client ${socket.id} disconnected.`);
   };
 
-  let getScatterPlotData = (parameters) => {
-    console.log(`Received data request with these parameters: ${parameters}`);
-    fs.readFile(`./data/${parameters}.json`, "utf8", (err, data) => {
+  let getArcDiagramData = () => {
+    fs.readFile(`./data/node_link.json`, "utf8", (err, data) => {
       if (err) {
         console.error(err);
         return;
       }
       let json_data = JSON.parse(data);
       console.log(json_data);
-      socket.emit("receiveScatterPlotData", json_data);
+      socket.emit("receiveArcDiagramData", json_data);
     });
   };
 
@@ -45,6 +44,6 @@ io.sockets.on("connection", (socket) => {
   };
 
   socket.on("disconnect", disconnect);
-  socket.on("getScatterPlotData", getScatterPlotData);
+  socket.on("getArcDiagramData", getArcDiagramData);
   socket.on("getBarChartData", getBarChartData);
 });
