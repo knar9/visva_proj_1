@@ -34,6 +34,7 @@ function transformDatapoints(datapoints) {
 }
 
 function createArcDiagram(data){
+
 console.log(data.nodes)
 // set the dimensions and margins of the graph
 var margin = {top: 0, right: 30, bottom: 50, left: 60},
@@ -154,22 +155,60 @@ nodes
       .style("font-size", 6 )
 
   })
- 
+  .on('click', function (d) {
+
+    var clickedNode = d.srcElement.__data__;
+    console.log(clickedNode)
+    console.log(data.links)
+
+    let sourceID = clickedNode.id
+    var linkedTargetIDs = data.links
+      .filter(function(link) {
+        return link.source === sourceID;
+      })
+      .map(function(link) {
+        return link.target;
+      });
+
+    linkedTargetIDs.push(sourceID)
+
+    console.log("Linked Target IDs:", linkedTargetIDs);
+    obj = "boardgames_100"
+
+    getScatterPlotData(obj, linkedTargetIDs)
+ })
 }
 
-function createScatterplot(obj) {
+function createBoardgamesData(obj){
+  console.log(obj)
+  return obj
+}
+
+function createScatterplot(obj, IDs) {
+  console.log("----------")
+  console.log(IDs)
+  console.log("----------")
+  console.log(obj)
+  console.log("----------")
+
+  var filteredData = obj.filter(function(o) {
+    return IDs.includes(o.id);
+  });
+  console.log(filteredData)
+  console.log("----------")
+
   let dataset = [];
   let datatuple = [];
   let temp = 0;
-  for (let i = 0; i < obj.length; i++) {
+  for (let i = 0; i < filteredData.length; i++) {
     //datatuple.push((obj[i].minplaytime + obj[i].maxplaytime) / 2);
-    for (let j = 0; j < obj[i].types.categories.length; j++)  {
+    for (let j = 0; j < filteredData[i].types.categories.length; j++)  {
       for (let k = 0; k < cats.length; k++) {
         //console.log(obj[i].types.categories[j].name)
-        if(obj[i].types.categories[j].name === cats[k]) {
+        if(filteredData[i].types.categories[j].name === cats[k]) {
           //datatuple.push(k + Math.random());
           datatuple.push(k);
-          datatuple.push(obj[i].rating.rating);
+          datatuple.push(filteredData[i].rating.rating);
           datatuple.push(0);
           dataset.push(datatuple);
           datatuple = [];
@@ -180,8 +219,9 @@ function createScatterplot(obj) {
   let test = dataset.map(({ 0: x, 1: y, 2: centroid_index }) => ({ x, y: y*50, centroid_index}));
   test = transformDatapoints(test);
 
-  let test1 = kmeansAlgo(test, 2);
+  //let test1 = kmeansAlgo(test, 1);
   //console.log(test1);
+  let test1 = test;
 
   test1 = test1.map(({x, y, centroid_index }) => ({ x, y: y/50, centroid_index}))
 
@@ -384,6 +424,23 @@ function getArcDiagramData() {
 function getBarChartData() {
   socket.emit("getBarChartData", "boardgames_100");
 }
+
+function getScatterPlotData(obj, IDs) {
+  plotted = true;
+    socket.emit("getScatterPlotData", obj, IDs);
+}
+
+function getBoardgamesData(obj) {
+    socket.emit("getBoardgamesData", obj);
+}
+
+socket.on("receiveBoardgamesData", (data) => {
+  createBoardgamesData(data);
+});
+
+socket.on("receiveScatterPlotData", (data, IDs) => {
+  createScatterplot(data, IDs);
+});
 
 socket.on("receiveArcDiagramData", (data) => {
   createArcDiagram(data);

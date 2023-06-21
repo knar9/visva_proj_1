@@ -34,8 +34,17 @@
         <button class="function_button" onclick="getBarChartData()">
           Barchart
         </button>
+        
       </div>
     </div>
+      <div id="scatterplot">
+        <div id="inputField" style="display: none">
+          <input type="text" id="catNumber" placeholder="x-axis number" />
+          <p>Input the x-axis number to get the category</p>
+          <button onclick="getCat()">Get Cat</button>
+          <p id="giveCat"></p>
+        </div>
+      </div>
       <div id="arcdiagram"></div>
       <div id="barchart-plot"></div>
     </div>

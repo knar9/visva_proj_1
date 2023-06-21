@@ -16,7 +16,7 @@ body {
   display: grid;
   grid-template-areas: "header" "content";
   grid-template-rows: 100px auto;
-  grid-template-columns: 1 1;
+  grid-template-columns: 1 1 1;
 }
 
 /* Layouting and styling the Header */
@@ -93,5 +93,13 @@ body {
   height: 400px;
   margin-top: 100px;
   grid-column: 2;
+  grid-row: 2;
+}
+
+#scatterplot {
+  width: 460px;
+  height: 400px;
+  margin-top: 30px;
+  grid-column: 3;
   grid-row: 2;
 }

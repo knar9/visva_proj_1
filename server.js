@@ -43,7 +43,35 @@ io.sockets.on("connection", (socket) => {
     });
   };
 
+  let getScatterPlotData = (parameters, IDs) => {
+    console.log(`Received data request with these parameters: ${parameters}`);
+    fs.readFile(`./data/${parameters}.json`, "utf8", (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      let json_data = JSON.parse(data);
+      //console.log(json_data);
+      socket.emit("receiveScatterPlotData", json_data, IDs);
+    });
+  };
+
+  let getBoardgamesData = (parameters) => {
+    console.log(`Received data request with these parameters: ${parameters}`);
+    fs.readFile(`./data/${parameters}.json`, "utf8", (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      let json_data = JSON.parse(data);
+      socket.emit("receiveBoardgamesData", json_data);
+    });
+  };
+
   socket.on("disconnect", disconnect);
   socket.on("getArcDiagramData", getArcDiagramData);
   socket.on("getBarChartData", getBarChartData);
+  socket.on("getScatterPlotData", getScatterPlotData);
+  socket.on("getBoardgamesData", getBoardgamesData);
+
 });
