@@ -18,6 +18,19 @@ io.sockets.on("connection", (socket) => {
     console.log(`Client ${socket.id} disconnected.`);
   };
 
+  let calculatePageRank = (graph) => {
+    console.log("Calculating PageRank...");
+    const dampingFactor = 0.85;
+    const tolerance = 0.0001;
+    const maxIterations = 100;
+
+    // Perform the PageRank algorithm on the graph data
+    const result = pagerank(graph, dampingFactor, tolerance, maxIterations);
+
+    console.log("PageRank calculation complete.");
+    socket.emit("receivePageRankData", result);
+  };
+
   let getScatterPlotData = (parameters, plotted) => {
     console.log(`Received data request with these parameters: ${parameters}`);
     fs.readFile(`./data/${parameters}.json`, "utf8", (err, data) => {
@@ -58,6 +71,7 @@ io.sockets.on("connection", (socket) => {
   };
 
   socket.on("disconnect", disconnect);
+  socket.on("calculatePageRank", calculatePageRank);
   socket.on("getScatterPlotData", getScatterPlotData);
   socket.on("getBarChartData", getBarChartData);
   socket.on("getDataForLDA", getDataForLDA);
