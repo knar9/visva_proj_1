@@ -1,32 +1,20 @@
-# visva_proj_1
-Project 1 of Visual Analytics lecture
+# visva_proj_3
+# Project 3 of Visual Analytics lecture
 
-# Documentation for the Presentation
+Documentation for the Presentation
 
-### 0. Intro Slide (0.5)
+### Task 3. Obtaining insights
 
+From our dashboard we can observe the following insights:
+1. Recommendations are mostly mutual. - We see that often when game A has game B in its recommendations, game B has also game A in its recommendations. Lists of "fans liked" for both of these games are very similar.
 
-### 1. These are the two analysis tasks we came up with. Here why they could be interesting to a board-game developer (1)
-average game length compared to rating --> Scatterplot 
-frequency of minAge --> Barchart
+2. Games for adults and children are not popular. - From our barchart we can distinctly see that adult games (min age 17 years) and games with the low age entry level (min age 8) are not popular. The majority of the games are designed for people older than 12-14 years.
 
-### 2. Here’s how we preprocessed the data for these two analysis tasks  (1)
+3. No correlation between average game length and the rating. - From our scatterplot we didn't manage to derive any correlation between these two variables, i.e. the average game length doesn't influence the rating of the game.
 
-
-### 3. This is visualization 1, these are the techniques used (1)
-
-
-### 4. Here’s how it supports analysis task 1 well using terminology from the lecture(0.5)
-
-
-### 5. This is visualization 2, these are the techniques used. (1).
-
-
-### 6. Here’s how it supports analysis task 2 well using terminology from the lecture (0.5)
-
-
-### 7. Live demo demonstrating the visualization. Show how to obtain 1 insight per visualization (1)
-
-
-### 8. Short explanation of what could be improved (0.5)
-
+4. Most of the games were designed between 2015 and 2020. - On the arc diagram using the color scheme it is clearly visible that most of the games were developed within these 5 years. There can be several reasons for this:
+    - a big increase in boardgame development and popularity
+    - early games might not have as high rating as new ones nowadays, thus, they are out of top-100 list
+    - games after 2020 are also outnumbered since it's been only 2.5 years
+    
+We can also see that most of the games designed in the period between 2015 and 2020 are of an average game length (20-30 mins), i.e. not so short and not so long. At the same time games developed earlier (before 2005 and 2005-2010) are a way shorter, with the average playtime of 10-15  mins. Games released after 2020 have a longer playtime, between 45 and 60 mins. 
