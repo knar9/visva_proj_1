@@ -30,7 +30,6 @@ body {
   display: grid;
   grid-template-areas: "logo buttons";
   grid-template-columns: 250px auto;
-
   border-bottom: 2px solid white;
 }
 
@@ -77,8 +76,8 @@ body {
 }
 
 #arcdiagram {
-  width: 1300px;
-  height: 800px;
+  width: 900px;
+  height: 550px;
   margin-top: 30px;
   grid-column: 1;
   grid-row: 2;
@@ -92,7 +91,7 @@ body {
   width: 460px;
   height: 400px;
   margin-top: 100px;
-  grid-column: 2;
+  grid-column: 3;
   grid-row: 2;
 }
 
@@ -100,6 +99,6 @@ body {
   width: 460px;
   height: 400px;
   margin-top: 30px;
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 2;
 }

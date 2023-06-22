@@ -38,8 +38,8 @@ function createArcDiagram(data){
 console.log(data.nodes)
 // set the dimensions and margins of the graph
 var margin = {top: 0, right: 30, bottom: 50, left: 60},
-  width = 1300 - margin.left - margin.right,
-  height = 800 - margin.top - margin.bottom;
+  width = 900 - margin.left - margin.right,
+  height = 550 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 
